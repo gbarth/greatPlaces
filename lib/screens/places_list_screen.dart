@@ -21,27 +21,34 @@ class PlacesListScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer<GreatPlaces>(
-        child: const Center(
-          child: Text('No registered location'),
-        ),
-        builder: (context, greatPlaces, child) => greatPlaces.itemsCount == 0
-            ? child!
-            : Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 10,
-                  horizontal: 4,
+      body: FutureBuilder(
+        future: Provider.of<GreatPlaces>(context, listen: false).loadPlaces(),
+        builder: (context, snapshot) => snapshot.connectionState ==
+                ConnectionState.waiting
+            ? const Center(child: CircularProgressIndicator())
+            : Consumer<GreatPlaces>(
+                child: const Center(
+                  child: Text('No registered location'),
                 ),
-                child: ListView.builder(
-                  itemCount: greatPlaces.itemsCount,
-                  itemBuilder: (context, i) => ListTile(
-                    leading: CircleAvatar(
-                        backgroundImage:
-                            FileImage(greatPlaces.itemByIndex(i).image)),
-                    title: Text(greatPlaces.itemByIndex(i).title),
-                    onTap: () {},
-                  ),
-                ),
+                builder: (context, greatPlaces, child) =>
+                    greatPlaces.itemsCount == 0
+                        ? child!
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10,
+                              horizontal: 4,
+                            ),
+                            child: ListView.builder(
+                              itemCount: greatPlaces.itemsCount,
+                              itemBuilder: (context, i) => ListTile(
+                                leading: CircleAvatar(
+                                    backgroundImage: FileImage(
+                                        greatPlaces.itemByIndex(i).image)),
+                                title: Text(greatPlaces.itemByIndex(i).title),
+                                onTap: () {},
+                              ),
+                            ),
+                          ),
               ),
       ),
     );
