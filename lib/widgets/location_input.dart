@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:great_places/screens/map_screen.dart';
 import 'package:great_places/utils/location_util.dart';
 import 'package:location/location.dart';
 
 class LocationInput extends StatefulWidget {
-  const LocationInput({Key? key}) : super(key: key);
+  final Function onSelectPosiiton;
+
+  const LocationInput(this.onSelectPosiiton, {Key? key}) : super(key: key);
 
   @override
   State<LocationInput> createState() => _LocationInputState();
@@ -23,6 +27,28 @@ class _LocationInputState extends State<LocationInput> {
     setState(() {
       _previewImageUrl = staticMapImageUrl;
     });
+  }
+
+  Future<void> _selectOnMap() async {
+    final LatLng selectedLocation = await Navigator.of(context).push(
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (context) => const MapScreen(),
+      ),
+    );
+
+    if (selectedLocation == null) return;
+
+    final staticMapImageUrl = LocationUtil.generateLocationPreviewImage(
+      latitude: selectedLocation.latitude,
+      longitude: selectedLocation.longitude,
+    );
+
+    setState(() {
+      _previewImageUrl = staticMapImageUrl;
+    });
+
+    widget.onSelectPosiiton(selectedLocation);
   }
 
   @override
@@ -51,13 +77,12 @@ class _LocationInputState extends State<LocationInput> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextButton.icon(
-              onPressed: _getCurrentUserLocation,
-              icon: Icon(Icons.location_on,
-                  color: Theme.of(context).colorScheme.secondary),
-              label: const Text('Current location'),
-            ),
+                onPressed: _getCurrentUserLocation,
+                icon: Icon(Icons.location_on,
+                    color: Theme.of(context).colorScheme.secondary),
+                label: const Text('Current location')),
             TextButton.icon(
-              onPressed: () {},
+              onPressed: _selectOnMap,
               icon: Icon(Icons.map,
                   color: Theme.of(context).colorScheme.secondary),
               label: const Text('Select on map'),
