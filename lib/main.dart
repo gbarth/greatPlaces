@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:great_places/providers/great_places.dart';
+import 'package:great_places/screens/place_detail_screen.dart';
 import 'package:great_places/screens/place_form_screen.dart';
 import 'package:great_places/screens/places_list_screen.dart';
 import 'package:great_places/utils/app_routes.dart';
@@ -22,18 +23,21 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Great Places',
         theme: ThemeData(
-            colorScheme: ColorScheme.fromSwatch().copyWith(
-              primary: Colors.black,
-              secondary: Color.fromARGB(255, 8, 130, 10),
-              brightness: Brightness.light,
-            ),
-            textTheme: const TextTheme(
-              headline1: TextStyle(color: Colors.black),
-              headline2: TextStyle(color: Colors.white),
-            )),
+          colorScheme: ColorScheme.fromSwatch().copyWith(
+            primary: Colors.black,
+            secondary: Color.fromARGB(255, 8, 130, 10),
+            brightness: Brightness.light,
+          ),
+          textTheme: const TextTheme(
+            headline1: TextStyle(color: Colors.black),
+            headline2: TextStyle(color: Colors.white),
+          ),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
         home: const PlacesListScreen(),
         routes: {
           AppRoutes.PLACE_FORM: (context) => const PlaceFormScreen(),
+          AppRoutes.PLACE_DETAIL: (context) => const PlaceDetailScreen()
         },
       ),
     );

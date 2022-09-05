@@ -5,6 +5,7 @@ import 'package:great_places/models/place.dart';
 class MapScreen extends StatefulWidget {
   final PlaceLocation initialLocation;
   final bool isReadyOnly;
+  final String title;
 
   const MapScreen(
       {this.initialLocation = const PlaceLocation(
@@ -12,6 +13,7 @@ class MapScreen extends StatefulWidget {
         longitude: -122.078827,
       ),
       this.isReadyOnly = false,
+      this.title = 'Select',
       Key? key})
       : super(key: key);
 
@@ -32,7 +34,7 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Select'),
+        title: Text(widget.title),
         actions: [
           if (!widget.isReadyOnly)
             IconButton(
@@ -52,12 +54,13 @@ class _MapScreenState extends State<MapScreen> {
           zoom: 13,
         ),
         onTap: widget.isReadyOnly ? null : _selectPosition,
-        markers: _pickedPosition == null
+        markers: (_pickedPosition == null && !widget.isReadyOnly)
             ? {}
             : {
                 Marker(
                   markerId: const MarkerId('p1'),
-                  position: _pickedPosition!,
+                  position:
+                      _pickedPosition ?? widget.initialLocation.toLatLng(),
                 ),
               },
       ),
